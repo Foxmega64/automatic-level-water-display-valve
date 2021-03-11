@@ -1,0 +1,92 @@
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27,16,2);
+int Poca;
+int Lleno;
+int mitadtad; //25
+int mitad; //50
+int doblemitad; //75
+int full; //100
+int relay = 8;
+void setup() {
+  Serial.begin(9600);
+  pinMode(2, INPUT);
+  pinMode(3, INPUT);
+  pinMode(4, INPUT);
+  pinMode(5, INPUT);
+  pinMode(6, INPUT);
+  pinMode(7, INPUT);
+  pinMode(relay, OUTPUT);
+  lcd.init();
+  lcd.backlight();
+  lcd.clear();
+
+}
+void loop() {
+  Poca = digitalRead(2);
+  Lleno = digitalRead(3);
+  mitadtad = digitalRead(4);
+  mitad = digitalRead(5);
+  doblemitad = digitalRead(6);
+  full = digitalRead(7);
+
+  if (Lleno == 1 && Poca == 1)
+{ Serial.println("lleno");
+digitalWrite(relay, HIGH);
+  delay(1000);
+}
+if (Poca == 1 && Lleno == 0 )
+{
+  Serial.println("poca agua");
+  delay(1000);
+}
+if (Poca == 0 && Lleno == 0)
+{
+  Serial.println("sin agua");
+  digitalWrite(relay, LOW);
+  delay(1000);
+}
+if (Poca == 0 && Lleno == 0 && full == 0 && doblemitad == 0 && mitad == 0 && mitadtad == 0)
+{
+Serial.println("0%");
+lcd.setCursor(0,0);
+lcd.print("0%");
+lcd.setCursor(0,1);
+lcd.print("vacio, cerrado");
+delay(1000);
+}
+if (Poca == 1 && Lleno == 0 && full == 0 && doblemitad == 0 && mitad == 0 && mitadtad == 1)
+{
+  Serial.println("25%");
+  lcd.setCursor(0,0);
+lcd.print("25%");
+lcd.setCursor(0,1);
+lcd.print("lleno al 25%");
+delay(1000);
+}
+if (Poca == 1 && Lleno == 0 && full == 0 && doblemitad == 0 && mitad == 1 && mitadtad == 1)
+{
+  Serial.println("50%");
+  lcd.setCursor(0,0);
+lcd.print("50%");
+lcd.setCursor(0,1);
+lcd.print("lleno al 50%");
+delay(1000);
+}
+if (Poca == 1 && Lleno == 0 && full == 0 && doblemitad == 1 && mitad == 1 && mitadtad == 1)
+{
+    Serial.println("75%");
+    lcd.setCursor(0,0);
+lcd.print("75%");
+lcd.setCursor(0,1);
+lcd.print("lleno al 75%");
+delay(1000);
+}
+if (Poca == 1 && Lleno == 1 && full == 1 && doblemitad == 1 && mitad == 1 && mitadtad == 1)
+{
+    Serial.println("100%");lcd.setCursor(0,0);
+lcd.print("100%");
+lcd.setCursor(0,1);
+lcd.print("lleno; abierto");
+delay(1000);
+}
+}
